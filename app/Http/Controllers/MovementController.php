@@ -111,6 +111,12 @@ class MovementController extends Controller
             $movement = Movement::where('purchase_reference', $purchase_reference);
             $movement->update($request->all());
 
+            if ($request->status_id == 4){
+                $ticket = Ticket::find($movement->first()->ticket->id);
+                $ticket->quantity = $ticket->quantity + $movement->first()->quantity;
+                $ticket->save();
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'resource updated'

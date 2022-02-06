@@ -5,6 +5,7 @@ namespace Tests\Feature\app\Http\Controllers;
 use App\Models\Movement;
 use App\Models\Status;
 use App\Models\Ticket;
+use Database\Seeders\StatusSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Tests\TestCase;
@@ -156,4 +157,55 @@ class MovementControllerTest extends TestCase
             'total_amount' => 100000
         ]);
     }
+
+    public function testUpdateResourceMovementCancelReservationDiscount(){
+
+        $this->seed(StatusSeeder::class);
+        $ticket = Ticket::factory()->create([
+            'quantity' => 100
+        ]);
+        $movement = Movement::factory()
+            ->for($ticket)
+            ->forCustomer()
+            ->create([
+                'quantity' => 50,
+                'total_amount' => 50000,
+                'status_id' => 1
+            ]);
+
+        $response = $this->putjson('api/movements/' . $movement->purchase_reference,[
+            'status_id' => 4
+        ]);
+
+        $this->assertDatabaseHas('movements', [
+            'purchase_reference' => $movement->purchase_reference,
+            'status_id' => 4
+        ]);
+    }
+
+    public function testUpdateQuantityticketsCancelReservation(){
+
+        $this->seed(StatusSeeder::class);
+        $ticket = Ticket::factory()->create([
+            'quantity' => 100
+        ]);
+        $movement = Movement::factory()
+            ->for($ticket)
+            ->forCustomer()
+            ->create([
+                'quantity' => 50,
+                'total_amount' => 50000,
+                'status_id' => 1
+            ]);
+
+        $response = $this->putjson('api/movements/' . $movement->purchase_reference,[
+            'status_id' => 4
+        ]);
+
+        $this->assertDatabaseHas('tickets', [
+            'code' => $ticket->code,
+            'quantity' => 150
+        ]);
+    }
+
 }

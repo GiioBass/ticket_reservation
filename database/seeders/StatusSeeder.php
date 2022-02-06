@@ -16,19 +16,23 @@ class StatusSeeder extends Seeder
     {
         DB::table('statuses')->insert([
             [
-                'code' => 0001,
+                'id' => 1,
+                'code' => 10,
                 'description' => 'Reservado',
             ],
             [
-                'code' => 0002,
+                'id' => 2,
+                'code' => 20,
                 'description' => 'Pago',
             ],
             [
-                'code' => 0003,
+                'id' => 3,
+                'code' => 30,
                 'description' => 'Reclamado',
             ],
             [
-                'code' => 0004,
+                'id' => 4,
+                'code' => 40,
                 'description' => 'Cancelado',
             ]
         ]);
