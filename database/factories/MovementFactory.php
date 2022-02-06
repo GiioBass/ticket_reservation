@@ -14,7 +14,7 @@ class MovementFactory extends Factory
     public function definition()
     {
         return [
-            'quantity' => $this->faker->randomDigit(),
+            'quantity' => $this->faker->numberBetween(1, 500),
             'description' => $this->faker->sentence( 6, true),
 
         ];

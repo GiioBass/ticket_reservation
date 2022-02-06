@@ -42,7 +42,7 @@ class TicketController extends Controller
             ], 201);
 
         }catch(\Throwable $th){
-            Log::error('Resource not created' . $th);
+            Log::error('Resource not created' . $th, [ 'ticket' => $ticket]);
             return response()->json([
                 'status' => 'error',
                 'message' => 'resource not created'
