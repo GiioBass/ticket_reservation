@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class MovementFactory extends Factory
+class StatusFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -14,10 +14,8 @@ class MovementFactory extends Factory
     public function definition()
     {
         return [
-            'purchase_reference' => (int) $this->faker->postcode(),
-            'quantity' => $this->faker->numberBetween(1, 500),
-            'description' => $this->faker->sentence( 6, true),
-
+            'code' => $this->faker->randomDigit(),
+            'description' => $this->faker->word()
         ];
     }
 }

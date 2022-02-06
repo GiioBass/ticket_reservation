@@ -41,12 +41,13 @@ class MovementController extends Controller
             }
 
             $movement = Movement::create([
-                'purchase_reference' => $request->purchase_referece,
+                'purchase_reference' => $request->purchase_reference,
                 'total_amount' => $request->quantity * $ticket->price,
                 'quantity' => $request->quantity,
                 'description' => $request->description,
                 'ticket_id' => $request->ticket_id,
-                'customer_id' => $request->customer_id
+                'customer_id' => $request->customer_id,
+                'status_id' => $request->status_id
             ]);
 
             $ticket->quantity = $ticket->quantity - $request->quantity;
@@ -58,7 +59,7 @@ class MovementController extends Controller
             ], 201);
 
         }catch(\Throwable $th){
-            Log::error('Resource not created' . $th, ['movement' => $movement]);
+            Log::error('Resource not created' . $th);
             return response()->json([
                 'status' => 'error',
                 'message' => 'resource not created'
@@ -77,7 +78,7 @@ class MovementController extends Controller
     {
         try {
 
-        $movement = Movement::where('puchase_reference', $purchase_reference)->get();
+        $movement = Movement::where('purchase_reference', $purchase_reference)->get();
 
         if($movement->isEmpty() ){
             return response()->json([
@@ -103,9 +104,25 @@ class MovementController extends Controller
      * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMovementRequest $request, Movement $movement)
+    public function update(UpdateMovementRequest $request, $purchase_reference)
     {
-        //
+        try{
+
+            $movement = Movement::where('purchase_reference', $purchase_reference);
+            $movement->update($request->all());
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'resource updated'
+            ], 201);
+
+        }catch(\Throwable $th){
+            Log::error('Resource not created' . $th);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'resource not created'
+            ], 500);
+        }
     }
 
     /**

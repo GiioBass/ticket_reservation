@@ -14,7 +14,6 @@ class TicketControllerTest extends TestCase
     public function testStoreTicketSuccess(){
         $ticket = Ticket::factory()->make()->toArray();
         $response =$this->postJson('api/tickets', $ticket);
-        $response->dump();
         $response->assertCreated();
     }
 
