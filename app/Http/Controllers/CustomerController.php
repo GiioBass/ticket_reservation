@@ -16,7 +16,7 @@ class CustomerController extends Controller
      *
      * @return CustomerCollection
      */
-    public function index()
+    public function index(): CustomerCollection
     {
         return new CustomerCollection(Customer::paginate(10));
     }
@@ -60,7 +60,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return CustomerResource
      */
-    public function show($identification_number)
+    public function show($identification_number): CustomerResource
     {
         try {
 
@@ -90,7 +90,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateCustomerRequest $request, $identification_number)
+    public function update(UpdateCustomerRequest $request, $identification_number): \Illuminate\Http\JsonResponse
     {
         try{
 
