@@ -8,11 +8,7 @@ use Tests\TestCase;
 
 class CustomerControllerTest extends TestCase
 {
-//    use RefreshDatabase;
 
-    /**
-     *
-     */
     public function testStoreCustomerSuccess(){
         $customer = Customer::factory()->make()->toArray();
         $response = $this->postJson('api/customers', $customer);

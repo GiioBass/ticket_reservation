@@ -19,4 +19,11 @@ class Ticket extends Model
         'price'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function movement(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Movement::class);
+    }
 }

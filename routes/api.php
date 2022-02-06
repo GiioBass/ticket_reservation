@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MovementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
@@ -21,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('customers', CustomerController::class);
 Route::resource('tickets', TicketController::class);
+Route::resource('movements', MovementController::class);

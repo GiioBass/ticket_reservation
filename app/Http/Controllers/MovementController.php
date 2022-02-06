@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
-use App\Models\Customer;
+use App\Http\Requests\StoreMovementRequest;
+use App\Http\Requests\UpdateMovementRequest;
+use App\Models\Movement;
+use App\Models\Ticket;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
 
-class CustomerController extends Controller
+class MovementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,19 +23,21 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreCustomerRequest  $request
+     * @param  \App\Http\Requests\StoreMovementRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreCustomerRequest $request): \Illuminate\Http\JsonResponse
+    public function store(StoreMovementRequest $request): \Illuminate\Http\JsonResponse
     {
         try{
 
-            $customer = Customer::create([
-                'identification_number' => $request->identification_number,
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'address' => $request->address
+            $priceTicket = Ticket::findOrFail($request->ticket_id)->price;
+
+            $movement = Movement::create([
+                'total_amount' => $request->quantity * $priceTicket,
+                'quantity' => $request->quantity,
+                'description' => $request->description,
+                'ticket_id' => $request->ticket_id,
+                'customer_id' => $request->customer_id
             ]);
 
             return response()->json([
@@ -56,10 +58,10 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Movement $movement)
     {
         //
     }
@@ -67,11 +69,11 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateCustomerRequest  $request
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Http\Requests\UpdateMovementRequest  $request
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateMovementRequest $request, Movement $movement)
     {
         //
     }
@@ -79,10 +81,10 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Customer  $customer
+     * @param  \App\Models\Movement  $movement
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy(Movement $movement)
     {
         //
     }

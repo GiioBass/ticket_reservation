@@ -21,7 +21,7 @@ class StoreTicketRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|string',
@@ -31,7 +31,11 @@ class StoreTicketRequest extends FormRequest
         ];
     }
 
-    public function messages(){
+    /**
+     * @return string[]
+     */
+    public function messages(): array
+    {
         return [
             'name.required' => 'El nombre es requerido',
             'name.string' => 'El nombre debe ser tipo texto',

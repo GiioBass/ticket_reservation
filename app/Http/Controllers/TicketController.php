@@ -25,7 +25,7 @@ class TicketController extends Controller
      * @param  \App\Http\Requests\StoreTicketRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreTicketRequest $request)
+    public function store(StoreTicketRequest $request): \Illuminate\Http\JsonResponse
     {
         try{
 

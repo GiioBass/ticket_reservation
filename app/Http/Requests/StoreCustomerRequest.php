@@ -21,7 +21,7 @@ class StoreCustomerRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'identification_number' => 'required|string|unique:customers,identification_number',
@@ -32,7 +32,11 @@ class StoreCustomerRequest extends FormRequest
         ];
     }
 
-    public function messages(){
+    /**
+     * @return string[]
+     */
+    public function messages(): array
+    {
         return [
             'identification_number.required' => 'El número de indentificación es requerido',
             'identification_number.unique' => 'El número de indentificación se encuentra registrado',
