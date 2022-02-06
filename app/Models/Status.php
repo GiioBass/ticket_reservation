@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Status extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'description',
+        'code'
+    ];
+
+    public function movement(){
+        return $this->hasMany(Movement::class);
+    }
 }

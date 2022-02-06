@@ -13,12 +13,13 @@ class Movement extends Model
      * @var string[]
      */
     protected $fillable = [
-        'pucharse_reference',
+        'purchase_reference',
         'total_amount',
         'quantity',
         'description',
         'ticket_id',
-        'customer_id'
+        'customer_id',
+        'status_id'
     ];
 
     /**
@@ -35,6 +36,10 @@ class Movement extends Model
     public function customer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function status(){
+        return $this->belongsTo(Status::class);
     }
 
 }

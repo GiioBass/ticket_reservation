@@ -21,6 +21,7 @@ class CreateMovementsTable extends Migration
             $table->string('description');
             $table->foreignId('ticket_id')->constrained();
             $table->foreignId('customer_id')->constrained();
+            $table->foreignId('status_id')->constrained();
             $table->softDeletes();
             $table->timestamps();
         });

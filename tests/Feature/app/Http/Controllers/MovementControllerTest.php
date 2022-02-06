@@ -3,6 +3,7 @@
 namespace Tests\Feature\app\Http\Controllers;
 
 use App\Models\Movement;
+use App\Models\Status;
 use App\Models\Ticket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -17,9 +18,11 @@ class MovementControllerTest extends TestCase
         $ticket = Ticket::factory()->create([
             'quantity' => 200
         ]);
+        $status = Status::factory()->create();
         $movement = Movement::factory()
             ->for($ticket)
             ->forCustomer()
+            ->for($status)
             ->make([
                 'quantity' => 100
             ])->toArray();
@@ -28,11 +31,13 @@ class MovementControllerTest extends TestCase
     }
 
     public function testStoreMovementSuccessValidatedQuantityOfTickets(){
+        $status = Status::factory()->create();
         $ticket = Ticket::factory()->create([
             'quantity' => 200
         ]);
         $movement = Movement::factory()
             ->for($ticket)
+            ->for($status)
             ->forCustomer()
             ->make([
                 'quantity' => 100
@@ -48,8 +53,10 @@ class MovementControllerTest extends TestCase
         $ticket = Ticket::factory()->create([
             'quantity' => 50
         ]);
+        $status = Status::factory()->create();
         $movement = Movement::factory()
             ->for($ticket)
+            ->for($status)
             ->forCustomer()
             ->make([
                 'quantity' => 100
@@ -71,12 +78,14 @@ class MovementControllerTest extends TestCase
     }
 
     public function testIndexMovement(){
+        $status = Status::factory()->create();
         $ticket = Ticket::factory()->create([
             'quantity' => 100
         ]);
         Movement::factory()
             ->for($ticket)
             ->forCustomer()
+            ->for($status)
             ->create([
                 'quantity' => 50,
                 'total_amount' => 50000
@@ -86,21 +95,65 @@ class MovementControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function testShowResourceMovementNotFound(){
+    public function testShowResourceMovement(){
+        $status = Status::factory()->create();
         $ticket = Ticket::factory()->create([
             'quantity' => 100
         ]);
         Movement::factory()
             ->for($ticket)
             ->forCustomer()
+            ->for($status)
             ->create([
                 'quantity' => 50,
                 'total_amount' => 50000
             ]);
 
         $response = $this->getjson('api/movements/'. $ticket->purchase_reference);
-        $response->dump();
         $response->assertOk();
     }
 
+    public function testShowResourceMovementNotFound(){
+        $status = Status::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'quantity' => 100
+        ]);
+        Movement::factory()
+            ->for($ticket)
+            ->forCustomer()
+            ->for($status)
+            ->create([
+                'quantity' => 50,
+                'total_amount' => 50000
+            ]);
+
+        $response = $this->getjson('api/movements/12345678');
+        $response->assertNotFound();
+    }
+
+    public function testUpdateResourceMovement(){
+        $status = Status::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'quantity' => 100
+        ]);
+        $movement = Movement::factory()
+            ->for($ticket)
+            ->forCustomer()
+            ->for($status)
+            ->create([
+                'quantity' => 50,
+                'total_amount' => 50000
+            ]);
+
+        $response = $this->putjson('api/movements/' . $movement->purchase_reference,[
+            'quantity' => 60,
+            'total_amount' => 100000
+        ]);
+
+        $this->assertDatabaseHas('movements', [
+            'purchase_reference' => $movement->purchase_reference,
+            'quantity' => 60,
+            'total_amount' => 100000
+        ]);
+    }
 }

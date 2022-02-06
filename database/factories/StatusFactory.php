@@ -14,7 +14,8 @@ class StatusFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'code' => $this->faker->randomDigit(),
+            'description' => $this->faker->word()
         ];
     }
 }
