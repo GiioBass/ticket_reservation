@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Resources\CustomerCollection;
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return CustomerCollection
      */
-    public function index()
+    public function index(): CustomerCollection
     {
-        //
+        return new CustomerCollection(Customer::paginate(10));
     }
 
     /**
@@ -40,7 +41,7 @@ class CustomerController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'resource created'
+                'message' => 'resource updated'
             ], 201);
 
         }catch(\Throwable $th){
@@ -57,11 +58,29 @@ class CustomerController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @return CustomerResource
      */
-    public function show(Customer $customer)
+    public function show($identification_number): CustomerResource
     {
-        //
+        try {
+
+        $customer = Customer::where('identification_number', $identification_number)->get();
+
+        if($customer->isEmpty() ){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'resource not found'
+            ], 404);
+        }
+
+        return new CustomerResource($customer);
+
+        }catch (\Throwable $th){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'resource not found'
+            ], 500);
+        }
     }
 
     /**
@@ -69,11 +88,27 @@ class CustomerController extends Controller
      *
      * @param  \App\Http\Requests\UpdateCustomerRequest  $request
      * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, $identification_number): \Illuminate\Http\JsonResponse
     {
-        //
+        try{
+
+        $customer = Customer::where('identification_number', $identification_number);
+        $customer->update($request->all());
+
+        return response()->json([
+                'status' => 'success',
+                'message' => 'resource updated'
+            ], 201);
+
+        }catch(\Throwable $th){
+            Log::error('Resource not created' . $th);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'resource not created'
+            ], 500);
+        }
     }
 
     /**
