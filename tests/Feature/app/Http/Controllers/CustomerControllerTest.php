@@ -42,7 +42,6 @@ class CustomerControllerTest extends TestCase
     public function testShowResourceCustomerSuccess(){
         $customer = Customer::factory()->create();
         $response = $this->getJson('api/customers/' . $customer->identification_number);
-        $response->dump();
         $response->assertOk();
     }
 

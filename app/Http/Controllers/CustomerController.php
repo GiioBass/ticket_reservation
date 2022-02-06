@@ -60,7 +60,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return CustomerResource
      */
-    public function show($identification_number): CustomerResource
+    public function show($identification_number)
     {
         try {
 
