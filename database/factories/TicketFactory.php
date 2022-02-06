@@ -16,7 +16,7 @@ class TicketFactory extends Factory
         return [
             'name' => $this->faker->word(),
             'code' => $this->faker->postcode(),
-            'quantity' => $this->faker->numberBetween(100, 500),
+            'quantity' => $this->faker->numberBetween(10, 500),
             'price' => $this->faker->year()
         ];
     }
