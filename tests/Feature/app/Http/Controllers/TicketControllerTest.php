@@ -18,7 +18,7 @@ class TicketControllerTest extends TestCase
         $response->assertCreated();
     }
 
-    public function testErrorDataCustomer(){
+    public function testErrorDataTicket(){
         $ticket = Ticket::factory()->make([
             'quantity' => ''
         ])->toArray();
@@ -26,9 +26,46 @@ class TicketControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function testErrorDuplicateDataCustomer(){
+    public function testErrorDuplicateDataTicket(){
         $ticket = Ticket::factory()->create()->toArray();
         $response = $this->postJson('api/tickets', $ticket);
         $response->assertStatus(422);
     }
+
+    public function testIndexTicket(){
+        Ticket::factory()->count(50)->create();
+        $response = $this->getJson('api/tickets',[
+            'Accept' => 'application/json',
+            'Content-type' => 'application/json'
+        ]);
+        $response->assertOk();
+    }
+
+    public function testShowResourceTicketSuccess(){
+        $ticket = Ticket::factory()->create();
+        $response = $this->getJson('api/tickets/' . $ticket->code);
+        $response->assertOk();
+    }
+
+    public function testShowResourceTicketNotFound(){
+        Ticket::factory()->create();
+        $response = $this->getJson('api/tickets/12345678' );
+        $response->assertNotFound();
+    }
+
+    public function testUpdateResourceTicketSuccess(){
+
+        $ticket = Ticket::factory()->create();
+
+        $response = $this->putJson('api/tickets/' . $ticket->code, [
+            'quantity' => '1000',
+            'price' => '50000'
+        ]);
+        $this->assertDatabaseHas('tickets', [
+            'code' => $ticket->code,
+            'quantity' => '1000',
+            'price' => '50000'
+        ]);
+    }
+
 }
