@@ -13,6 +13,7 @@ class Movement extends Model
      * @var string[]
      */
     protected $fillable = [
+        'pucharse_reference',
         'total_amount',
         'quantity',
         'description',

@@ -70,5 +70,37 @@ class MovementControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function testIndexMovement(){
+        $ticket = Ticket::factory()->create([
+            'quantity' => 100
+        ]);
+        Movement::factory()
+            ->for($ticket)
+            ->forCustomer()
+            ->create([
+                'quantity' => 50,
+                'total_amount' => 50000
+            ]);
+
+        $response = $this->getjson('api/movements');
+        $response->assertOk();
+    }
+
+    public function testShowResourceMovementNotFound(){
+        $ticket = Ticket::factory()->create([
+            'quantity' => 100
+        ]);
+        Movement::factory()
+            ->for($ticket)
+            ->forCustomer()
+            ->create([
+                'quantity' => 50,
+                'total_amount' => 50000
+            ]);
+
+        $response = $this->getjson('api/movements/'. $ticket->purchase_reference);
+        $response->dump();
+        $response->assertOk();
+    }
 
 }

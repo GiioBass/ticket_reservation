@@ -24,6 +24,7 @@ class StoreMovementRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'puchase_reference' => 'required|integer|unique:movements,purchase_reference',
             'quantity' => 'required|integer',
             'description' => 'string',
             'ticket_id' => 'required|exists:tickets,id',
@@ -37,6 +38,9 @@ class StoreMovementRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'purchase.reference.required' => 'La referencia de compra es requerida',
+            'purchase.reference.unique' => 'La referencia de compra se encuentra registrada',
+            'purchase.reference.integer' => 'La referencia de compra debe ser de tipo númerico',
             'quantity.required' => 'La cantidad es requerida',
             'quantity.integer' => 'La cantidad debe ser númerica',
             'description.string' => 'La description debe ser de tipo texto',

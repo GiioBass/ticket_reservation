@@ -16,6 +16,7 @@ class CreateMovementsTable extends Migration
         Schema::create('movements', function (Blueprint $table) {
             $table->id();
             $table->decimal('total_amount');
+            $table->integer('purchase_reference')->unique();
             $table->mediumInteger('quantity');
             $table->string('description');
             $table->foreignId('ticket_id')->constrained();

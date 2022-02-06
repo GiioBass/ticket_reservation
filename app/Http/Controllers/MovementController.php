@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMovementRequest;
 use App\Http\Requests\UpdateMovementRequest;
+use App\Http\Resources\MovementCollection;
+use App\Http\Resources\MovementResource;
 use App\Models\Movement;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Log;
@@ -13,11 +15,11 @@ class MovementController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return MovementCollection
      */
     public function index()
     {
-        //
+        return new MovementCollection(Movement::paginate(10));
     }
 
     /**
@@ -39,6 +41,7 @@ class MovementController extends Controller
             }
 
             $movement = Movement::create([
+                'purchase_reference' => $request->purchase_referece,
                 'total_amount' => $request->quantity * $ticket->price,
                 'quantity' => $request->quantity,
                 'description' => $request->description,
@@ -68,11 +71,29 @@ class MovementController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Movement  $movement
-     * @return \Illuminate\Http\Response
+     * @return MovementResource
      */
-    public function show(Movement $movement)
+    public function show($purchase_reference)
     {
-        //
+        try {
+
+        $movement = Movement::where('puchase_reference', $purchase_reference)->get();
+
+        if($movement->isEmpty() ){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'resource not found'
+            ], 404);
+        }
+
+        return new MovementResource($movement);
+
+    }catch (\Throwable $th){
+        return response()->json([
+            'status' => 'error',
+            'message' => 'resource not found'
+        ], 500);
+    }
     }
 
     /**

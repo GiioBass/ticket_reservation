@@ -14,6 +14,7 @@ class MovementFactory extends Factory
     public function definition()
     {
         return [
+            'purchase_reference' => $this->faker->postcode(),
             'quantity' => $this->faker->numberBetween(1, 500),
             'description' => $this->faker->sentence( 6, true),
 
